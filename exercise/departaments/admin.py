@@ -1,3 +1,26 @@
 from django.contrib import admin
 
-# Register your models here.
+from departaments.models import Departament
+
+
+class UsersInline(admin.TabularInline):
+    model = Departament.users.through
+    readonly_fields = 'binded_at',
+
+
+class FamiliesInline(admin.TabularInline):
+    model = Departament.families.through
+    fk_name = 'parent'
+    readonly_fields = 'level',
+
+
+class DepartamentAdmin(admin.ModelAdmin):
+    fields = 'id', 'name', 'company'
+    readonly_fields = 'id',
+    inlines = [
+        UsersInline,
+        FamiliesInline
+    ]
+
+
+admin.site.register(Departament, DepartamentAdmin)

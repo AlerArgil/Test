@@ -1,13 +1,31 @@
 import pytz
+from django.apps import apps
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.hashers import make_password
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 from timezone_field import TimeZoneField
 
 from core.models import IdWithPostfixModel
+
+
+class CustomUserManager(UserManager):
+    def _create_user(self, username, email, password, **extra_fields):
+        """
+        Create and save a user with the given username and password. But Exclude email
+        """
+        if not username:
+            raise ValueError('The given username must be set')
+        GlobalUserModel = apps.get_model(self.model._meta.app_label, self.model._meta.object_name)
+        username = GlobalUserModel.normalize_username(username)
+        user = self.model(username=username, **extra_fields)
+        user.password = make_password(password)
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractUser, IdWithPostfixModel):
@@ -37,6 +55,7 @@ class User(AbstractUser, IdWithPostfixModel):
     POSTFIX = 1
 
     TIMEZONES = tuple(zip(pytz.all_timezones, pytz.all_timezones))
+    REQUIRED_FIELDS = ['password']
 
     phone = PhoneNumberField(unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
@@ -53,6 +72,8 @@ class User(AbstractUser, IdWithPostfixModel):
     created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
     updated_at = models.DateTimeField(_('updated_at'), auto_now=True)
     email = None
+
+    objects = CustomUserManager()
 
 
 class AdditionalInfo(models.Model):
