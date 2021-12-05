@@ -17,10 +17,14 @@ class FamiliesInline(admin.TabularInline):
 class DepartamentAdmin(admin.ModelAdmin):
     fields = 'id', 'name', 'company'
     readonly_fields = 'id',
+    list_display = 'id', 'clients_count',
     inlines = [
         UsersInline,
         FamiliesInline
     ]
+
+    def clients_count(self, instance):
+        return instance.users.count()
 
 
 admin.site.register(Departament, DepartamentAdmin)
