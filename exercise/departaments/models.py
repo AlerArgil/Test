@@ -29,7 +29,7 @@ class DepartamentUser(models.Model):
     departament = models.ForeignKey(verbose_name=_('departament'), to=Departament, on_delete=models.CASCADE,
                                     related_name='binds')
     user = models.ForeignKey(verbose_name=_('user'), to=User, on_delete=models.CASCADE, related_name='binds')
-    binded_at = models.DateTimeField(_('binded_at'), auto_now_add=True)
+    binded_at = models.DateTimeField(verbose_name=_('binded_at'), auto_now_add=True)
 
 
 class Family(models.Model):
@@ -40,7 +40,7 @@ class Family(models.Model):
                                related_name='child')
     child = models.OneToOneField(verbose_name=_('child'), to=Departament, on_delete=models.CASCADE,
                                  related_name='parent', unique=True)
-    level = models.PositiveSmallIntegerField(_('level'), default=1, validators=[MaxValueValidator(7)])
+    level = models.PositiveSmallIntegerField(verbose_name=_('level'), default=1, validators=[MaxValueValidator(7)])
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.level = self.current_level()

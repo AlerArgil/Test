@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import generics
+from rest_framework.pagination import LimitOffsetPagination
 
-# Create your views here.
+from clients.models import User
+from clients.serializers import ListUserSerializer
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = ListUserSerializer
+    pagination_class = LimitOffsetPagination
