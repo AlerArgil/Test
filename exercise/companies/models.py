@@ -1,4 +1,4 @@
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -12,7 +12,7 @@ class Company(IdWithPostfixModel, models.Model):
     POSTFIX = 2
     full_name = models.CharField(_('full name'), max_length=300)
     cut_name = models.CharField(_('cut name'), max_length=150)
-    inn = models.CharField(_('INN'), max_length=12, validators=[MinLengthValidator(10)])
-    kpp = models.CharField(_('KPP'), max_length=9, validators=[MinLengthValidator(9)])
+    inn = models.CharField(_('INN'), max_length=12, validators=[RegexValidator(r'^\d{10,12}$'), MinLengthValidator(10)])
+    kpp = models.CharField(_('KPP'), max_length=9, validators=[RegexValidator(r'^\d{9}$'), MinLengthValidator(9)])
     created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
     updated_at = models.DateTimeField(_('updated_at'), auto_now=True)

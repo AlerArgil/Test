@@ -17,7 +17,7 @@ class Departament(IdWithPostfixModel, models.Model):
     company = models.ForeignKey(verbose_name=_('company'), to=Company, on_delete=models.CASCADE,
                                 related_name='departaments')
     users = models.ManyToManyField(verbose_name=_('users'), to=User, related_name='departaments',
-                                   through='DepartamentUser')
+                                   through='DepartamentUser', blank=True)
     families = models.ManyToManyField(verbose_name=_('families'), to='self', symmetrical=False,
                                       through='Family', through_fields=('parent', 'child'), blank=True)
 
@@ -44,6 +44,7 @@ class Family(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.level = self.current_level()
+        print(self.level)
         super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
     def clean(self):
