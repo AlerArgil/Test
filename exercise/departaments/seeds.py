@@ -8,6 +8,9 @@ from departaments.models import Departament, DepartamentUser, Family
 
 
 def departament_seed():
+    """
+    Creating Departament instance
+    """
     f = faker.Faker()
     departaments = []
     try:
@@ -22,6 +25,10 @@ def departament_seed():
 
 
 def departament_user_seed(seeder):
+    """
+    Creating DepartamentUser instances
+    :params seeder Seeder from django_seed instance
+    """
     seeder.add_entity(DepartamentUser, 80000,{
         'departament': Departament.objects.order_by('?').first(),
         'user': User.objects.order_by('?').first()
@@ -29,6 +36,10 @@ def departament_user_seed(seeder):
 
 
 def family_seed(seeder):
+    """
+    Creating Families instances
+    :params seeder Seeder from django_seed instance
+    """
     seeder.add_entity(Family, 15000, {
         'parent': lambda x: Departament.objects.order_by('?').first(),
         'child': lambda x: Departament.objects.order_by('?').first()
@@ -36,6 +47,10 @@ def family_seed(seeder):
 
 
 def all_seed(seeder):
+    """
+    Running all departments seeds
+    :params seeder Seeder from django_seed instance
+    """
     departament_seed()
     departament_user_seed(seeder)
     family_seed(seeder)

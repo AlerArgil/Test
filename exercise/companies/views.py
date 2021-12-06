@@ -1,11 +1,16 @@
+from django.db.models import Prefetch
 from rest_framework import generics
-from rest_framework.pagination import LimitOffsetPagination
 
 from companies.models import Company
 from companies.serializers import ListCompanySerializer
+from departaments.models import Departament
 
 
 class CompanyList(generics.ListAPIView):
-    queryset = Company.objects.all()
+    """
+    Company List view
+    """
+    queryset = Company.objects.prefetch_related(
+        Prefetch('departaments', queryset=Departament.objects.prefetch_related('users'))
+    ).all()
     serializer_class = ListCompanySerializer
-    pagination_class = LimitOffsetPagination

@@ -1,11 +1,12 @@
 from rest_framework import generics
-from rest_framework.pagination import LimitOffsetPagination
 
 from clients.models import User
 from clients.serializers import ListUserSerializer
 
 
 class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
+    """
+    User List view
+    """
+    queryset = User.objects.prefetch_related('add_infos').all()
     serializer_class = ListUserSerializer
-    pagination_class = LimitOffsetPagination
