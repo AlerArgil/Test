@@ -132,5 +132,3 @@ dmypy.json
 testenv/
 
 .idea
-
-exercise/exercise/settings.py
